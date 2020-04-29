@@ -1,3 +1,5 @@
+"use strict";
+
 const { BrowserWindow, app, ipcMain, Menu } = require("electron");
 const fs = require("fs").promises;
 const path = require("path");

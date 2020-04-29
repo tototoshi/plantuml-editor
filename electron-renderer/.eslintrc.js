@@ -22,6 +22,7 @@ module.exports = {
     'react'
   ],
   rules: {
+    strict: ['error', 'global']
   },
   settings: {
     react: {

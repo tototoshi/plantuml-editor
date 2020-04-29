@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = (app, eventEmitter) => {
   const isMac = process.platform === "darwin";
 
