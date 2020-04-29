@@ -11,29 +11,48 @@ class App extends React.Component {
       svg: "",
       flash: null,
     };
+    this.textarea = React.createRef();
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
     ipcRenderer.invoke("ipc-init");
-    ipcRenderer.on("ipc-app-state-updated", (e, state) => {
-      const newState = {};
-      if (typeof state.filePath !== "undefined")
-        newState.filePath = state.filePath;
-      if (typeof state.content !== "undefined")
-        newState.content = state.content;
-      if (typeof state.svg !== "undefined") newState.svg = state.svg;
-      if (typeof state.flash !== "undefined") newState.flash = state.flash;
-      this.setState(newState);
+
+    ipcRenderer.on('init', (e, state) => {
+      this.setState(state);
+    })
+
+    ipcRenderer.on('file-opened', (e, state) => {
+      this.setState(state)
+      this.textarea.value = state.content;
+      this.textarea.selectionStart = this.textarea.selectionEnd = 0;
+      this.flash('opened');
+    });
+
+    ipcRenderer.on('svg-updated', (e, state) => {
+      this.setState(state)
+    });
+
+    ipcRenderer.on('file-saved', (e, state) => {
+      this.setState(state)
+      this.flash('saved');
     });
   }
 
+  flash(message) {
+    this.setState({ flash: message })
+    setTimeout(() => this.setState({flash: null}), 1000);
+  }
+
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners("ipc-app-state-updated");
+    ipcRenderer.removeAllListeners("init");
+    ipcRenderer.removeAllListeners('file-opened');
+    ipcRenderer.removeAllListeners('svg-updated');
+    ipcRenderer.removeAllListeners('file-saved');
   }
 
   handleChange(e) {
-    ipcRenderer.invoke("ipc-update-app-state", { content: e.target.value });
+    ipcRenderer.invoke("ipc-input", { content: e.target.value });
   }
 
   utf8ToB64(str) {
@@ -60,6 +79,7 @@ class App extends React.Component {
         <div className="row">
           <div className="left">
             <textarea
+              ref={this.textarea}
               defaultValue={this.state.content}
               onChange={this.handleChange}
             ></textarea>
