@@ -2,11 +2,11 @@ body {
   margin: 0;
 }
 
-.status-line{
+.status-line {
   font-family: monospace;
 }
 
-.status-line span.file-path{
+.status-line span.file-path {
   display: inline-block;
   margin-right: 5px;
 }

@@ -18,37 +18,37 @@ class App extends React.Component {
   componentDidMount() {
     ipcRenderer.invoke("ipc-init");
 
-    ipcRenderer.on('init', (e, state) => {
+    ipcRenderer.on("init", (e, state) => {
       this.setState(state);
-    })
+    });
 
-    ipcRenderer.on('file-opened', (e, state) => {
-      this.setState(state)
+    ipcRenderer.on("file-opened", (e, state) => {
+      this.setState(state);
       this.textarea.value = state.content;
       this.textarea.selectionStart = this.textarea.selectionEnd = 0;
-      this.flash('opened');
+      this.flash("opened");
     });
 
-    ipcRenderer.on('svg-updated', (e, state) => {
-      this.setState(state)
+    ipcRenderer.on("svg-updated", (e, state) => {
+      this.setState(state);
     });
 
-    ipcRenderer.on('file-saved', (e, state) => {
-      this.setState(state)
-      this.flash('saved');
+    ipcRenderer.on("file-saved", (e, state) => {
+      this.setState(state);
+      this.flash("saved");
     });
   }
 
   flash(message) {
-    this.setState({ flash: message })
-    setTimeout(() => this.setState({flash: null}), 1000);
+    this.setState({ flash: message });
+    setTimeout(() => this.setState({ flash: null }), 1000);
   }
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners("init");
-    ipcRenderer.removeAllListeners('file-opened');
-    ipcRenderer.removeAllListeners('svg-updated');
-    ipcRenderer.removeAllListeners('file-saved');
+    ipcRenderer.removeAllListeners("file-opened");
+    ipcRenderer.removeAllListeners("svg-updated");
+    ipcRenderer.removeAllListeners("file-saved");
   }
 
   handleChange(e) {
@@ -68,13 +68,15 @@ class App extends React.Component {
       <div>
         <div className="status-line">
           <span className="file-path">{this.state.filePath}</span>
-          <span>{(() => {
-            if (this.state.flash) {
-              return "(" + this.state.flash + ")"
-            } else {
-              return ""
-            }
-          })()}</span>
+          <span>
+            {(() => {
+              if (this.state.flash) {
+                return "(" + this.state.flash + ")";
+              } else {
+                return "";
+              }
+            })()}
+          </span>
         </div>
         <div className="row">
           <div className="left">

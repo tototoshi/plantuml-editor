@@ -1,17 +1,15 @@
 "use strict";
 
-const { BrowserWindow, app, ipcMain } = require("electron");
+const { BrowserWindow, app } = require("electron");
 
 const Service = require("./service");
 const AppState = require("./app_state");
-const AppMenu = require('./app_menu');
+const AppMenu = require("./app_menu");
+const Notifier = require("./notifier");
 
 let service;
 
 const createWindow = async () => {
-  service = new Service();
-  await service.start();
-
   const win = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
@@ -23,32 +21,12 @@ const createWindow = async () => {
 
   win.loadFile("index.html");
 
-  const appState = new AppState(win);
+  const appState = new AppState(win, appMenu);
 
-  appState.on('request-svg', (content) => {
-    (async () => {
-      const data = await service.renderPlantUML(content);
-      const svg = new TextDecoder("utf-8").decode(data);
-      win.webContents.send("svg-updated", { svg: svg });
-    })().catch((e) => console.log(e));
-  })
+  service = new Service(appState);
+  await service.start();
 
-  ipcMain.handle("ipc-init", async () => {
-    await appState.onInit();
-  });
-
-  ipcMain.handle("ipc-input", async (e, state) => {
-    appState.onUserInput(state.content);
-  });
-
-  appMenu.on("save", (force) => {
-    appState.onFileSaved(force).catch((e) => console.error(e));
-  });
-
-  appMenu.on("open", () => {
-    appState.onFileOpened().catch((e) => console.error(e));
-  });
-
+  new Notifier(win, appState, service);
 };
 
 app.on("ready", async () => {

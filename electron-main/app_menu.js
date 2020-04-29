@@ -1,10 +1,9 @@
 "use strict";
 
-const { Menu } = require('electron');
-const { EventEmitter } = require('events');
+const { Menu } = require("electron");
+const { EventEmitter } = require("events");
 
 module.exports = class AppMenu extends EventEmitter {
-
   constructor(appName) {
     super();
     this.appName = appName;
@@ -86,10 +85,17 @@ module.exports = class AppMenu extends EventEmitter {
               { type: "separator" },
               {
                 label: "Speech",
-                submenu: [{ role: "startspeaking" }, { role: "stopspeaking" }],
+                submenu: [
+                  { role: "startspeaking" },
+                  { role: "stopspeaking" },
+                ],
               },
             ]
-            : [{ role: "delete" }, { type: "separator" }, { role: "selectAll" }]),
+            : [
+              { role: "delete" },
+              { type: "separator" },
+              { role: "selectAll" },
+            ]),
         ],
       },
       {
@@ -144,5 +150,4 @@ module.exports = class AppMenu extends EventEmitter {
       },
     ];
   }
-
-}
+};

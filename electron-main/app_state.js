@@ -1,23 +1,32 @@
 "use strict";
 
-const { dialog } = require('electron');
+const { dialog, ipcMain } = require("electron");
 const { EventEmitter } = require("events");
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 module.exports = class extends EventEmitter {
-  constructor(win) {
+  constructor(win, appMenu) {
     super();
     this.win = win;
     this.filePath = null;
     this.content = null;
-  }
 
-  get() {
-    return {
-      filePath: this.filePath,
-      content: this.content,
-    };
+    appMenu.on("save", (force) => {
+      this.onFileSaved(force).catch((e) => console.error(e));
+    });
+
+    appMenu.on("open", () => {
+      this.onFileOpened().catch((e) => console.error(e));
+    });
+
+    ipcMain.handle("ipc-init", async () => {
+      await this.onInit();
+    });
+
+    ipcMain.handle("ipc-input", async (e, state) => {
+      this.onUserInput(state.content);
+    });
   }
 
   async onInit() {
@@ -39,11 +48,8 @@ module.exports = class extends EventEmitter {
 
     this.filePath = filePath;
     this.content = content;
-    this.win.webContents.send('init', {
-      filePath: filePath,
-      content: content
-    })
-    this.emit('request-svg', content);
+    this.emit("init", { filePath: filePath, content: content });
+    this.emit("request-svg", content);
   }
 
   async onFileOpened() {
@@ -55,11 +61,11 @@ module.exports = class extends EventEmitter {
     }
     this.filePath = result.filePaths[0];
     this.content = await fs.readFile(this.filePath, { encoding: "utf-8" });
-    this.win.webContents.send('file-opened', {
+    this.emit("file-opened", {
       filePath: this.filePath,
-      content: this.content
-    })
-    this.emit('request-svg', this.content);
+      content: this.content,
+    });
+    this.emit("request-svg", this.content);
   }
 
   async onFileSaved(force) {
@@ -71,17 +77,12 @@ module.exports = class extends EventEmitter {
       this.filePath = result.filePath;
     }
     await fs.writeFile(this.filePath, this.content);
-    this.win.webContents.send('file-saved', {
-      filePath: this.filePath,
-    })
+    this.emit("file-saved", { filePath: this.filePath });
   }
 
   onUserInput(content) {
     this.content = content;
-    this.win.webContents.send('content-changed', {
-      content: content
-    })
-    this.emit('request-svg', content);
+    this.emit("content-changed", { content: content });
+    this.emit("request-svg", content);
   }
-
 };

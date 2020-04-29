@@ -4,6 +4,7 @@ const child_process = require("child_process");
 const path = require("path");
 const grpc = require("grpc");
 const net = require("net");
+const { EventEmitter } = require("events");
 const services = require("./proto/app_grpc_pb");
 const messages = require("./proto/app_pb");
 
@@ -39,11 +40,16 @@ const stringToBytes = (s) => {
   return new TextEncoder("utf-8").encode(s);
 };
 
-module.exports = class {
-  constructor() {
+module.exports = class extends EventEmitter {
+  constructor(appState) {
+    super();
     this.serverStarted = false;
     this.client = null;
     this.service = null;
+
+    appState.on("request-svg", (content) => {
+      this.renderPlantUML(content).catch((e) => console.log(e));
+    });
   }
 
   async start() {
@@ -77,17 +83,15 @@ module.exports = class {
       this.serverStarted = true;
     }
 
-    return new Promise((resolve, reject) => {
-      const request = new messages.PlantUMLRenderingRequest();
-      request.setData(stringToBytes(content));
-
-      this.client.renderPlantUML(request, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(response.getData());
-        }
-      });
+    const request = new messages.PlantUMLRenderingRequest();
+    request.setData(stringToBytes(content));
+    this.client.renderPlantUML(request, (err, response) => {
+      if (err) {
+        console.error(err);
+      } else {
+        const svg = new TextDecoder("utf-8").decode(response.getData());
+        this.emit("svg-rendered", svg);
+      }
     });
   }
 
