@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "com.github.tototoshi.previewer";
+
+message PlantUMLRenderingRequest {
+    bytes data = 1;
+}
+
+message PlantUMLRenderingResponse {
+    bytes data = 1;
+}
+
+service Previewer {
+    rpc RenderPlantUML(PlantUMLRenderingRequest) returns (PlantUMLRenderingResponse) {}
+}

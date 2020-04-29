@@ -1,0 +1,9 @@
+backend/protobuf/
+target/
+
+node_modules/
+
+electron-main/proto/
+electron-main/dist/
+electron-main/service/
+
