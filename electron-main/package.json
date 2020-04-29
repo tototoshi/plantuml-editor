@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "npx electron .",
-    "format": "npx prettier@2.0.5 . --write",
+    "lint": "npx eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +17,7 @@
     "grpc": "npm:@grpc/grpc-js@^1.0.3"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "grpc-tools": "^1.8.1"
   }
 }

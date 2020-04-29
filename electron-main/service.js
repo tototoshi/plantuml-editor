@@ -6,11 +6,11 @@ const services = require("./proto/app_grpc_pb");
 const messages = require("./proto/app_pb");
 
 const waitServer = (port) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const tryConnect = () => {
       const socket = new net.Socket();
       socket.connect({ port: port });
-      socket.on("error", (e) => {
+      socket.on("error", () => {
         setTimeout(() => {
           tryConnect();
         }, 100);
@@ -24,7 +24,7 @@ const waitServer = (port) => {
 };
 
 const getAvailablePort = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const server = net.createServer(() => {});
     server.listen(0, () => {
       resolve(server.address().port);

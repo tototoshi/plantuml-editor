@@ -1,15 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ipcRenderer, remote } from "electron";
-
-window.addEventListener(
-  "contextmenu",
-  (e) => {
-    e.preventDefault();
-    menu.popup({ window: remote.getCurrentWindow() });
-  },
-  false
-);
+import { ipcRenderer } from "electron";
 
 class App extends React.Component {
   constructor(props) {
