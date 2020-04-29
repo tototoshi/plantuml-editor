@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx electron .",
     "lint": "npx eslint --fix .",
+    "package": "npx electron-packager . 'PlantUML Editor' --platform=darwin --overwrite --arch=x64",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +18,7 @@
     "grpc": "npm:@grpc/grpc-js@^1.0.3"
   },
   "devDependencies": {
+    "electron-packager": "^14.2.1",
     "eslint": "^6.8.0",
     "grpc-tools": "^1.8.1"
   }
