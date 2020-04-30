@@ -8,6 +8,10 @@ export default class Notifier {
       win.webContents.send("init", data);
     });
 
+    appState.on("new-file", (data) => {
+      win.webContents.send("new-file", data);
+    });
+
     appState.on("file-opened", (data) => {
       win.webContents.send("file-opened", data);
     });

@@ -22,10 +22,14 @@ class App extends React.Component {
       this.setState(state);
     });
 
+    ipcRenderer.on("new-file", (e, state) => {
+      this.setState(state);
+      this.setTextarea(state.content);
+    });
+
     ipcRenderer.on("file-opened", (e, state) => {
       this.setState(state);
-      this.textarea.value = state.content;
-      this.textarea.selectionStart = this.textarea.selectionEnd = 0;
+      this.setTextarea(state.content);
       this.flash("opened");
     });
 
@@ -39,6 +43,11 @@ class App extends React.Component {
     });
   }
 
+  setTextarea(content) {
+    this.textarea.current.value = content;
+    this.textarea.current.selectionStart = this.textarea.current.selectionEnd = 0;
+  }
+
   flash(message) {
     this.setState({ flash: message });
     setTimeout(() => this.setState({ flash: null }), 1000);
@@ -46,6 +55,7 @@ class App extends React.Component {
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners("init");
+    ipcRenderer.removeAllListeners("new-file");
     ipcRenderer.removeAllListeners("file-opened");
     ipcRenderer.removeAllListeners("svg-updated");
     ipcRenderer.removeAllListeners("file-saved");

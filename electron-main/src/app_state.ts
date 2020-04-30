@@ -16,6 +16,10 @@ export default class AppState extends EventEmitter {
     this.filePath = null;
     this.content = null;
 
+    appMenu.on("new", () => {
+      this.onNewFile();
+    });
+
     appMenu.on("save", (force: boolean) => {
       this.onFileSaved(force).catch((e) => console.error(e));
     });
@@ -54,6 +58,13 @@ export default class AppState extends EventEmitter {
     this.content = content;
     this.emit("init", { filePath: filePath, content: content });
     this.emit("request-svg", content);
+  }
+
+  onNewFile() {
+      this.filePath = null;
+      this.content = "@startuml\n\n\n@enduml\n";
+      this.emit("new-file", {  filePath: this.filePath, content: this.content });
+      this.emit("request-svg", this.content);
   }
 
   async onFileOpened() {

@@ -41,6 +41,13 @@ export default class AppMenu extends EventEmitter {
         label: "File",
         submenu: [
           {
+            label: "New File",
+            accelerator: "CmdOrCtrl+N",
+            click: () => {
+              this.emit("new");
+            },
+          },
+          {
             label: "Open",
             accelerator: "CmdOrCtrl+O",
             click: () => {
