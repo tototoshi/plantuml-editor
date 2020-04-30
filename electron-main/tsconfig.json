@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "dist/",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "sourceMap": true
+    },
+    "include": [
+        "src"
+    ]
+}

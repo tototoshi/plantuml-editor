@@ -31,7 +31,7 @@ gen_java() {
 gen_js() {
     local electron_dir=$(pwd)/electron-main
     local bin_path=$electron_dir/node_modules/.bin
-    local src_dir=$electron_dir/proto
+    local src_dir=$electron_dir/src
 
     mkdir -p $src_dir
     $bin_path/grpc_tools_node_protoc \
@@ -49,7 +49,16 @@ build_backend() {
     pushd $backend_dir
     sbt clean service/stage
     popd
-    rsync -av $backend_dir/service/target/universal/stage/ $electron_dir/service/
+    mkdir -p $electron_dir/dist/service
+    rsync -av $backend_dir/service/target/universal/stage/ $electron_dir/dist/service
+}
+
+build_main() {
+    local electron_dir=$(pwd)/electron-main
+
+    pushd $electron_dir
+    npm run build
+    popd
 }
 
 build_renderer() {
@@ -58,11 +67,12 @@ build_renderer() {
     pushd $electron_renderer_dir
     npm run webpack
     popd
-
 }
 
 npm_install
 gen_java
 gen_js
-build_backend
-build_renderer
+build_main &
+build_backend &
+build_renderer &
+wait

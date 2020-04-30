@@ -1,7 +1,9 @@
-"use strict";
+import { BrowserWindow } from "electron";
+import AppState from './app_state';
+import Service from './service';
 
-module.exports = class Notifier {
-  constructor(win, appState, service) {
+export default class Notifier {
+  constructor(win: BrowserWindow, appState: AppState, service: Service) {
     appState.on("init", (data) => {
       win.webContents.send("init", data);
     });
@@ -22,4 +24,4 @@ module.exports = class Notifier {
       win.webContents.send("svg-updated", { svg: svg });
     });
   }
-};
+}

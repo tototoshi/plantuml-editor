@@ -1,17 +1,19 @@
 {
   "name": "plantuml-editor",
-  "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
     "start": "npx electron .",
-    "lint": "npx eslint --fix .",
+    "build": "npx tsc",
+    "webpack": "cd ../electron-renderer && npm run webpack",
+    "clean": "rm dist/*.js",
     "package": "npx electron-packager . 'PlantUML Editor' --platform=darwin --overwrite --arch=x64",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^13.13.4",
     "child_process": "^1.0.2",
     "electron": "^8.2.3",
     "google-protobuf": "^3.11.4",
@@ -19,7 +21,7 @@
   },
   "devDependencies": {
     "electron-packager": "^14.2.1",
-    "eslint": "^6.8.0",
-    "grpc-tools": "^1.8.1"
+    "grpc-tools": "^1.8.1",
+    "typescript": "^3.8.3"
   }
 }

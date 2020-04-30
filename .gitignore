@@ -3,7 +3,8 @@ target/
 
 node_modules/
 
-electron-main/proto/
 electron-main/dist/
-electron-main/service/
+
+electron-main/src/app_pb.js
+electron-main/src/app_grpc_pb.js
 

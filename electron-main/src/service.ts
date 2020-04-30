@@ -1,14 +1,15 @@
-"use strict";
+import * as child_process from "child_process";
+import { EventEmitter } from "events";
+import { credentials } from "grpc";
+import * as net from "net";
+import * as path from "path";
+import * as services from "./app_grpc_pb";
+import * as messages from "./app_pb";
+import AppState from './app_state';
+import { ChildProcessWithoutNullStreams } from "child_process";
+import { AddressInfo } from "net";
 
-const child_process = require("child_process");
-const path = require("path");
-const grpc = require("grpc");
-const net = require("net");
-const { EventEmitter } = require("events");
-const services = require("./proto/app_grpc_pb");
-const messages = require("./proto/app_pb");
-
-const waitServer = (port) => {
+const waitServer = (port: number) => {
   return new Promise((resolve) => {
     const tryConnect = () => {
       const socket = new net.Socket();
@@ -26,22 +27,29 @@ const waitServer = (port) => {
   });
 };
 
-const getAvailablePort = () => {
+const getAvailablePort = () :Promise<number>=>  {
   return new Promise((resolve) => {
     const server = net.createServer(() => {});
     server.listen(0, () => {
-      resolve(server.address().port);
+      const addressInfo = server.address() as AddressInfo;
+      resolve(addressInfo.port);
       server.close();
     });
   });
 };
 
-const stringToBytes = (s) => {
-  return new TextEncoder("utf-8").encode(s);
+const stringToBytes = (s: string) => {
+  return new TextEncoder().encode(s);
 };
 
-module.exports = class extends EventEmitter {
-  constructor(appState) {
+export default class extends EventEmitter {
+
+  private port: number;
+  private serverStarted: boolean;
+  private service: ChildProcessWithoutNullStreams
+  private client: any;
+
+  constructor(appState: AppState) {
     super();
     this.serverStarted = false;
     this.client = null;
@@ -56,12 +64,12 @@ module.exports = class extends EventEmitter {
     this.port = await getAvailablePort();
     this.client = new services.PreviewerClient(
       "localhost:" + this.port,
-      grpc.credentials.createInsecure()
+      credentials.createInsecure()
     );
 
     this.service = child_process.spawn(
       path.join(__dirname, "service/bin/service"),
-      [this.port]
+      [this.port.toString()]
     );
 
     this.service.stdout.on("data", (data) => {
@@ -77,15 +85,15 @@ module.exports = class extends EventEmitter {
     });
   }
 
-  async renderPlantUML(content) {
+  async renderPlantUML(content: string) {
     if (!this.serverStarted) {
       await waitServer(this.port);
       this.serverStarted = true;
     }
 
-    const request = new messages.PlantUMLRenderingRequest();
+    const request = new (messages as any).PlantUMLRenderingRequest();
     request.setData(stringToBytes(content));
-    this.client.renderPlantUML(request, (err, response) => {
+    this.client.renderPlantUML(request, (err: any, response: any) => {
       if (err) {
         console.error(err);
       } else {
@@ -101,4 +109,4 @@ module.exports = class extends EventEmitter {
       this.service = null;
     }
   }
-};
+}

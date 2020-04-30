@@ -1,18 +1,22 @@
-"use strict";
+import { dialog, ipcMain, BrowserWindow } from "electron";
+import { EventEmitter } from "events";
+import { promises as fs } from "fs";
+import * as path from "path";
+import AppMenu from "./app_menu";
 
-const { dialog, ipcMain } = require("electron");
-const { EventEmitter } = require("events");
-const fs = require("fs").promises;
-const path = require("path");
+export default class AppState extends EventEmitter {
 
-module.exports = class extends EventEmitter {
-  constructor(win, appMenu) {
+  private win: BrowserWindow;
+  private filePath: string;
+  private content: string;
+
+  constructor(win: BrowserWindow , appMenu: AppMenu) {
     super();
     this.win = win;
     this.filePath = null;
     this.content = null;
 
-    appMenu.on("save", (force) => {
+    appMenu.on("save", (force: boolean) => {
       this.onFileSaved(force).catch((e) => console.error(e));
     });
 
@@ -68,9 +72,9 @@ module.exports = class extends EventEmitter {
     this.emit("request-svg", this.content);
   }
 
-  async onFileSaved(force) {
+  async onFileSaved(force: boolean) {
     if (force || !this.filePath) {
-      const result = await dialog.showSaveDialog(this.win);
+      const result = await dialog.showSaveDialog(this.win, {});
       if (result.canceled) {
         return;
       }
@@ -80,9 +84,9 @@ module.exports = class extends EventEmitter {
     this.emit("file-saved", { filePath: this.filePath });
   }
 
-  onUserInput(content) {
+  onUserInput(content: string) {
     this.content = content;
     this.emit("content-changed", { content: content });
     this.emit("request-svg", content);
   }
-};
+}

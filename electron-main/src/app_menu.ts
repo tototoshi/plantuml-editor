@@ -1,10 +1,8 @@
-"use strict";
-
 const { Menu } = require("electron");
 const { EventEmitter } = require("events");
 
-module.exports = class AppMenu extends EventEmitter {
-  constructor(appName) {
+export default class AppMenu extends EventEmitter {
+  constructor(appName: string) {
     super();
     this.appName = appName;
   }
@@ -104,7 +102,7 @@ module.exports = class AppMenu extends EventEmitter {
           {
             label: "Reload",
             accelerator: "CmdOrCtrl+R",
-            click: function (item, focusedWindow) {
+            click: (item: any, focusedWindow: any) => {
               if (focusedWindow) focusedWindow.reload();
             },
           },
@@ -114,7 +112,7 @@ module.exports = class AppMenu extends EventEmitter {
               if (process.platform == "darwin") return "Alt+Command+I";
               else return "Ctrl+Shift+I";
             })(),
-            click: function (item, focusedWindow) {
+            click: (item: any, focusedWindow: any) => {
               if (focusedWindow) focusedWindow.webContents.toggleDevTools();
             },
           },
@@ -150,4 +148,4 @@ module.exports = class AppMenu extends EventEmitter {
       },
     ];
   }
-};
+}

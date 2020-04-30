@@ -1,13 +1,10 @@
-"use strict";
+import { BrowserWindow, app } from "electron";
+import Service from "./service";
+import AppState from "./app_state";
+import AppMenu from "./app_menu";
+import Notifier from "./notifier";
 
-const { BrowserWindow, app } = require("electron");
-
-const Service = require("./service");
-const AppState = require("./app_state");
-const AppMenu = require("./app_menu");
-const Notifier = require("./notifier");
-
-let service;
+let service: Service;
 
 const createWindow = async () => {
   const win = new BrowserWindow({
