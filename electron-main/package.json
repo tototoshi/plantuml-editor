@@ -20,7 +20,7 @@
     "grpc": "npm:@grpc/grpc-js@^1.0.3"
   },
   "devDependencies": {
-    "electron-packager": "^14.2.1",
+    "electron-packager": "^15.2.0",
     "grpc-tools": "^1.8.1",
     "typescript": "^3.8.3"
   }
