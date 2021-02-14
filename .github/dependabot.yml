@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "npm"
+    directory: "/electron-main"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/electron-renderer"
+    schedule:
+      interval: "daily"
