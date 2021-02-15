@@ -20,7 +20,7 @@ lazy val service = project.in(file("service"))
     version := "0.1.0-SNAPSHOT",
     scalaVersion := "2.13.1",
     libraryDependencies ++= Seq(
-      "net.sourceforge.plantuml" % "plantuml" % "1.2020.7",
+      "net.sourceforge.plantuml" % "plantuml" % "1.2020.26",
       "io.grpc" % "grpc-netty" % "1.29.0" % Runtime,
     ),
     mappings in (Compile, packageDoc) := Seq()
