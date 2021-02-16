@@ -2,14 +2,7 @@
   "name": "plantuml-editor",
   "description": "",
   "main": "dist/main.js",
-  "scripts": {
-    "start": "npx electron .",
-    "build": "npx tsc",
-    "webpack": "cd ../electron-renderer && npm run webpack",
-    "clean": "rm dist/*.js",
-    "package": "npx electron-packager . 'PlantUML Editor' --platform=darwin --overwrite --arch=x64",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
