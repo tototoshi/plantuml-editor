@@ -5,7 +5,7 @@ import * as net from "net";
 import * as path from "path";
 import * as services from "./app_grpc_pb";
 import * as messages from "./app_pb";
-import AppState from './app_state';
+import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
 
@@ -27,7 +27,7 @@ const waitServer = (port: number): Promise<void> => {
   });
 };
 
-const getAvailablePort = () :Promise<number>=>  {
+const getAvailablePort = (): Promise<number> => {
   return new Promise((resolve) => {
     const server = net.createServer(() => {});
     server.listen(0, () => {
@@ -43,10 +43,9 @@ const stringToBytes = (s: string) => {
 };
 
 export default class extends EventEmitter {
-
   private port: number;
   private serverStarted: boolean;
-  private service: ChildProcessWithoutNullStreams
+  private service: ChildProcessWithoutNullStreams;
   private client: any;
 
   constructor(appState: AppState) {
