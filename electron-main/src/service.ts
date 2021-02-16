@@ -9,7 +9,7 @@ import AppState from './app_state';
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
 
-const waitServer = (port: number) => {
+const waitServer = (port: number): Promise<void> => {
   return new Promise((resolve) => {
     const tryConnect = () => {
       const socket = new net.Socket();
