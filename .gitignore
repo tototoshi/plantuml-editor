@@ -1,10 +1,6 @@
-backend/protobuf/
+.bsp/
 target/
 
 node_modules/
 
 electron-main/dist/
-
-electron-main/src/app_pb.js
-electron-main/src/app_grpc_pb.js
-

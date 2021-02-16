@@ -4,8 +4,8 @@ set -eux
 
 cd $(dirname $0)
 
-protobuf_include=$(pwd)
-protobuf_source=$(pwd)/app.proto
+protobuf_include=$(pwd)/protobuf
+protobuf_source=$protobuf_include/app.proto
 
 npm_install() {
     local electron_dir=$(pwd)/electron-main
@@ -14,18 +14,6 @@ npm_install() {
     (cd $electron_dir && npm install) &
     (cd $electron_renderer_dir && npm install) &
     wait
-}
-
-gen_java() {
-    local backend_dir=$(pwd)/backend
-    local src_dir=$backend_dir/protobuf/src/main/java
-
-    mkdir -p $src_dir
-    protoc \
-        -I $protobuf_include \
-        --grpc-java_out=$src_dir \
-        --java_out=$src_dir \
-        $protobuf_source
 }
 
 gen_js() {
@@ -47,10 +35,10 @@ build_backend() {
     local electron_dir=$(pwd)/electron-main
 
     pushd $backend_dir
-    sbt clean service/stage
+    sbt clean stage
     popd
     mkdir -p $electron_dir/dist/service
-    rsync -av $backend_dir/service/target/universal/stage/ $electron_dir/dist/service
+    rsync -av $backend_dir/target/universal/stage/ $electron_dir/dist/service
 }
 
 build_main() {
@@ -70,7 +58,6 @@ build_renderer() {
 }
 
 npm_install
-gen_java
 gen_js
 build_main &
 build_backend &
