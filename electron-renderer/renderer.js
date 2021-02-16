@@ -72,7 +72,7 @@ class App extends React.Component {
   render() {
     const data = this.utf8ToB64(this.state.svg);
 
-    const style = { maxWidth: "780px", maxHeight: "600px" };
+    const style = { maxWidth: "100%", maxHeight: "100%" };
 
     return (
       <div>
