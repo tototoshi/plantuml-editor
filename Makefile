@@ -6,13 +6,13 @@ protobuf_dir := $(root_dir)/protobuf
 bin_path := $(electron_dir)/node_modules/.bin
 
 .PHONY: install gen_js build_main build_renderer build_backend build start
-all: install gen_js build_main build_renderer build_backend build
+all: package
 
 install:
 	cd $(electron_dir) && npm install
 	cd $(electron_renderer_dir) && npm install
 
-gen_js:
+gen_js: install
 	mkdir -p $(electron_dir)/src
 	$(bin_path)/grpc_tools_node_protoc \
 	-I $(protobuf_dir) \
@@ -21,7 +21,7 @@ gen_js:
 	--plugin=protoc-gen-grpc=$(bin_path)/grpc_tools_node_protoc_plugin \
 	$(protobuf_dir)/app.proto
 
-build_main:
+build_main: gen_js
 	cd $(electron_dir) && npx tsc
 
 build_renderer:
@@ -30,13 +30,19 @@ build_renderer:
 
 build_backend:
 	cd $(backend_dir) && \
-	sbt clean stage && \
+	sbt stage && \
 	mkdir -p $(electron_dir)/dist/service && \
 	rsync -av $(backend_dir)/target/universal/stage/ $(electron_dir)/dist/service
 
 build: build_main build_renderer build_backend
 	cd $(electron_dir) && \
 	npx electron-packager . "PlantUML Editor" --platform=darwin --overwrite --arch=x64
+
+clean:
+	cd $(electron_dir) && \
+	rm -rf "PlantUML Editor-darwin-x64" dist
+	cd $(backend_dir) && \
+	sbt clean
 
 start:
 	cd $(electron_dir) && npx electron .
