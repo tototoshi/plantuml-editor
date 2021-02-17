@@ -68,7 +68,7 @@ export default class extends EventEmitter {
 
     this.service = child_process.spawn(
       path.join(__dirname, "service/bin/service"),
-      [this.port.toString()]
+      ["-Djava.awt.headless=true", this.port.toString()]
     );
 
     this.service.stdout.on("data", (data) => {
