@@ -1,5 +1,5 @@
 const renderer = {
-  entry: "./renderer.js",
+  entry: "./src/renderer.tsx",
   output: {
     filename: "renderer.js",
     path: __dirname + "/../electron-main/dist",
@@ -7,17 +7,9 @@ const renderer = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: [
-              ["@babel/preset-env", { targets: { node: true } }],
-              "@babel/preset-react",
-            ],
-          },
-        },
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },

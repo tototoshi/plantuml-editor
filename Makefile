@@ -6,7 +6,7 @@ protobuf_dir := $(root_dir)/protobuf
 bin_path := $(electron_dir)/node_modules/.bin
 
 .PHONY: install gen_js build_main build_renderer build_backend build start
-all: package
+all: build
 
 install:
 	cd $(electron_dir) && npm install
