@@ -1,9 +1,8 @@
 # plantuml-editor
 
 ```
-$ ./build.sh # require npm and sbt
-$ cd electron-main
-$ npm start
+$ make build # require npm and sbt
+$ make start
 ```
 
 ![demo](demo.gif)
