@@ -4,6 +4,7 @@ electron_renderer_dir := $(root_dir)/electron-renderer
 backend_dir := $(root_dir)/backend
 protobuf_dir := $(root_dir)/protobuf
 bin_path := $(electron_dir)/node_modules/.bin
+package_out := $(root_dir)/dist
 
 .PHONY: install gen_js build_main build_renderer build_backend build start
 all: build
@@ -36,7 +37,11 @@ build_backend:
 
 build: build_main build_renderer build_backend
 	cd $(electron_dir) && \
-	npx electron-packager . "PlantUML Editor" --platform=darwin --overwrite --arch=x64
+	npx electron-packager . "PlantUML Editor" \
+		--platform=darwin \
+		--overwrite \
+		--arch=x64 \
+		--out=$(package_out)
 
 clean:
 	cd $(electron_dir) && \
