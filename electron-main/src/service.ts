@@ -43,16 +43,15 @@ const stringToBytes = (s: string) => {
 };
 
 export default class extends EventEmitter {
-  private port: number;
+  private port?: number;
   private serverStarted: boolean;
-  private service: ChildProcessWithoutNullStreams;
+  private service?: ChildProcessWithoutNullStreams;
   private client: any;
 
   constructor(appState: AppState) {
     super();
     this.serverStarted = false;
     this.client = null;
-    this.service = null;
 
     appState.on("request-svg", (content) => {
       this.renderPlantUML(content).catch((e) => console.log(e));
@@ -85,6 +84,10 @@ export default class extends EventEmitter {
   }
 
   async renderPlantUML(content: string) {
+    if (this.port === undefined) {
+      throw new Error("#start is not called");
+    }
+
     if (!this.serverStarted) {
       await waitServer(this.port);
       this.serverStarted = true;
@@ -105,7 +108,7 @@ export default class extends EventEmitter {
   stop() {
     if (this.service) {
       this.service.kill();
-      this.service = null;
+      this.service = undefined;
     }
   }
 }

@@ -4,7 +4,7 @@ import AppState from "./app_state";
 import AppMenu from "./app_menu";
 import Notifier from "./notifier";
 
-let service: Service;
+let service: Service | undefined;
 
 const createWindow = async () => {
   const win = new BrowserWindow({
@@ -38,6 +38,6 @@ app.on("ready", async () => {
 app.on("before-quit", () => {
   if (service) {
     service.stop();
-    service = null;
+    service = undefined;
   }
 });

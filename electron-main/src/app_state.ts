@@ -1,20 +1,17 @@
 import { dialog, ipcMain, BrowserWindow } from "electron";
 import { EventEmitter } from "events";
 import { promises as fs } from "fs";
-import * as path from "path";
+import path from "path";
 import AppMenu from "./app_menu";
 
 export default class AppState extends EventEmitter {
-
   private win: BrowserWindow;
-  private filePath: string;
-  private content: string;
+  private filePath?: string;
+  private content?: string;
 
-  constructor(win: BrowserWindow , appMenu: AppMenu) {
+  constructor(win: BrowserWindow, appMenu: AppMenu) {
     super();
     this.win = win;
-    this.filePath = null;
-    this.content = null;
 
     appMenu.on("new", () => {
       this.onNewFile();
@@ -50,7 +47,6 @@ export default class AppState extends EventEmitter {
         content = await fs.readFile(filePath, { encoding: "utf-8" });
       } catch (e) {
         // file does not exist
-        filePath = null;
       }
     }
 
@@ -61,10 +57,10 @@ export default class AppState extends EventEmitter {
   }
 
   onNewFile() {
-      this.filePath = null;
-      this.content = "@startuml\n\n\n@enduml\n";
-      this.emit("new-file", {  filePath: this.filePath, content: this.content });
-      this.emit("request-svg", this.content);
+    this.filePath = undefined;
+    this.content = "@startuml\n\n\n@enduml\n";
+    this.emit("new-file", { filePath: this.filePath, content: this.content });
+    this.emit("request-svg", this.content);
   }
 
   async onFileOpened() {
@@ -84,13 +80,18 @@ export default class AppState extends EventEmitter {
   }
 
   async onFileSaved(force: boolean) {
-    if (force || !this.filePath) {
+    if (force || this.filePath === undefined) {
       const result = await dialog.showSaveDialog(this.win, {});
       if (result.canceled) {
         return;
       }
       this.filePath = result.filePath;
     }
+
+    if (this.filePath === undefined || this.content === undefined) {
+      return;
+    }
+
     await fs.writeFile(this.filePath, this.content);
     this.emit("file-saved", { filePath: this.filePath });
   }
