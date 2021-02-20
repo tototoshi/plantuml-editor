@@ -13,14 +13,13 @@ install:
 	cd $(electron_dir) && npm install
 	cd $(electron_renderer_dir) && npm install
 
-gen_js: install
-	mkdir -p $(electron_dir)/src
-	$(bin_path)/grpc_tools_node_protoc \
-	-I $(protobuf_dir) \
-	--js_out=import_style=commonjs,binary:$(electron_dir)/src \
-	--grpc_out=$(electron_dir)/src \
-	--plugin=protoc-gen-grpc=$(bin_path)/grpc_tools_node_protoc_plugin \
-	$(protobuf_dir)/app.proto
+gen_js:
+	cd $(electron_dir) && \
+	PATH=./node_modules/.bin:$(PATH) grpc_tools_node_protoc \
+		-I=$(protobuf_dir) \
+		--js_out=import_style=commonjs,binary:$(electron_dir)/src \
+		--grpc-web_out=import_style=typescript,mode=grpcweb:$(electron_dir)/src \
+		$(protobuf_dir)/app.proto
 
 build_main: gen_js
 	cd $(electron_dir) && npx tsc
