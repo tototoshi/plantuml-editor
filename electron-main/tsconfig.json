@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
         "module": "CommonJS",
-        "noImplicitAny": true,
-        "removeComments": true,
+        "strict": true,
         "preserveConstEnums": true,
         "outDir": "dist/",
         "allowJs": true,
         "skipLibCheck": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "esModuleInterop": true
     },
     "include": [
         "src"
