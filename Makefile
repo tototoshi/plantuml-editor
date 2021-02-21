@@ -14,12 +14,12 @@ install:
 	cd $(electron_renderer_dir) && npm install
 
 gen_js:
-	cd $(electron_dir) && \
-	PATH=./node_modules/.bin:$(PATH) grpc_tools_node_protoc \
-		-I=$(protobuf_dir) \
-		--js_out=import_style=commonjs,binary:$(electron_dir)/src \
-		--grpc-web_out=import_style=typescript,mode=grpcweb:$(electron_dir)/src \
-		$(protobuf_dir)/app.proto
+	curl https://raw.githubusercontent.com/tototoshi/docker-protoc-gen-grpc-web/main/Dockerfile | docker build -t protoc -
+	docker run --rm -v $(root_dir):/protoc protoc \
+		-I=protobuf/ \
+		--js_out=import_style=commonjs,binary:electron-main/src \
+		--grpc-web_out=import_style=typescript,mode=grpcweb:electron-main/src \
+		protobuf/app.proto
 
 build_main: gen_js
 	cd $(electron_dir) && npx tsc
