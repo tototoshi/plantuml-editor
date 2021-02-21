@@ -1,10 +1,10 @@
-import * as child_process from "child_process";
+import child_process from "child_process";
 import { EventEmitter } from "events";
 import { credentials } from "grpc";
-import * as net from "net";
-import * as path from "path";
-import * as services from "./app_grpc_pb";
-import * as messages from "./app_pb";
+import net from "net";
+import path from "path";
+import services from "./app_grpc_pb";
+import messages from "./app_pb";
 import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";

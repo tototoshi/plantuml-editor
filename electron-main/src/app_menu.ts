@@ -1,8 +1,8 @@
-const { Menu } = require("electron");
-const { EventEmitter } = require("events");
+import electron, { Menu } from "electron";
+import { EventEmitter } from "events";
 
 export default class AppMenu extends EventEmitter {
-  constructor(appName: string) {
+  constructor(private appName: string) {
     super();
     this.appName = appName;
   }
@@ -13,7 +13,7 @@ export default class AppMenu extends EventEmitter {
     Menu.setApplicationMenu(menu);
   }
 
-  menuTemplate() {
+  menuTemplate(): any {
     const isMac = process.platform === "darwin";
 
     return [
@@ -148,7 +148,7 @@ export default class AppMenu extends EventEmitter {
           {
             label: "Learn More",
             click: function () {
-              require("electron").shell.openExternal("http://electron.atom.io");
+              electron.shell.openExternal("http://electron.atom.io");
             },
           },
         ],
