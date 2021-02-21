@@ -21,7 +21,7 @@ gen_js:
 		--grpc-web_out=import_style=typescript,mode=grpcweb:electron-main/src \
 		protobuf/app.proto
 
-build_main: gen_js
+build_main:
 	cd $(electron_dir) && npx tsc
 
 build_renderer:
@@ -43,8 +43,9 @@ build: build_main build_renderer build_backend
 		--out=$(package_out)
 
 clean:
+	rm -rf dist
 	cd $(electron_dir) && \
-	rm -rf "PlantUML Editor-darwin-x64" dist
+	rm -rf dist
 	cd $(backend_dir) && \
 	sbt clean
 
