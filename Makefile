@@ -10,7 +10,7 @@ electron_npm_bin := $(electron_dir)/node_modules/.bin
 grpc_tools_node_protoc := $(electron_npm_bin)/grpc_tools_node_protoc
 grpc_tools_node_protoc_plugin := $(electron_npm_bin)/grpc_tools_node_protoc_plugin
 protoc-gen-ts := $(electron_npm_bin)/protoc-gen-ts
-protobuf_out := $(electron_dir)/src
+protobuf_out := $(electron_dir)/src/generated
 
 .PHONY: install gen_protobuf build_main build_renderer build_backend build start
 all: build
@@ -20,6 +20,7 @@ install:
 	cd $(electron_renderer_dir) && npm install
 
 gen_protobuf:
+	mkdir -p $(protobuf_out)
 	$(grpc_tools_node_protoc) \
 		--js_out=import_style=commonjs,binary:$(protobuf_out) \
 		--grpc_out=grpc_js:$(protobuf_out) \

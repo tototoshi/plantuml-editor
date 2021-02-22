@@ -3,8 +3,11 @@ import { EventEmitter } from "events";
 import { credentials, ServiceError } from "@grpc/grpc-js";
 import net from "net";
 import path from "path";
-import { PreviewerClient } from "./app_grpc_pb";
-import { PlantUMLRenderingRequest, PlantUMLRenderingResponse } from "./app_pb";
+import { PreviewerClient } from "./generated/app_grpc_pb";
+import {
+  PlantUMLRenderingRequest,
+  PlantUMLRenderingResponse,
+} from "./generated/app_pb";
 import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
