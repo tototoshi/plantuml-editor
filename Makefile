@@ -6,22 +6,33 @@ protobuf_dir := $(root_dir)/protobuf
 bin_path := $(electron_dir)/node_modules/.bin
 package_out := $(root_dir)/dist
 
-.PHONY: install gen_js build_main build_renderer build_backend build start
+electron_npm_bin := $(electron_dir)/node_modules/.bin
+grpc_tools_node_protoc := $(electron_npm_bin)/grpc_tools_node_protoc
+grpc_tools_node_protoc_plugin := $(electron_npm_bin)/grpc_tools_node_protoc_plugin
+protoc-gen-ts := $(electron_npm_bin)/protoc-gen-ts
+protobuf_out := $(electron_dir)/src
+
+.PHONY: install gen_protobuf build_main build_renderer build_backend build start
 all: build
 
 install:
 	cd $(electron_dir) && npm install
 	cd $(electron_renderer_dir) && npm install
 
-gen_js:
-	curl https://raw.githubusercontent.com/tototoshi/docker-protoc-gen-grpc-web/main/Dockerfile | docker build -t protoc -
-	docker run --rm -v $(root_dir):/protoc protoc \
-		-I=protobuf/ \
-		--js_out=import_style=commonjs,binary:electron-main/src \
-		--grpc-web_out=import_style=typescript,mode=grpcweb:electron-main/src \
-		protobuf/app.proto
+gen_protobuf:
+	$(grpc_tools_node_protoc) \
+		--js_out=import_style=commonjs,binary:$(protobuf_out) \
+		--grpc_out=grpc_js:$(protobuf_out) \
+		--plugin=protoc-gen-grpc=$(grpc_tools_node_protoc_plugin) \
+		-I protobuf \
+		protobuf/*.proto
+	$(grpc_tools_node_protoc) \
+		--plugin=protoc-gen-ts=$(protoc-gen-ts) \
+		--ts_out=$(protobuf_out) \
+		-I protobuf \
+		protobuf/*.proto
 
-build_main:
+build_main: gen_protobuf
 	cd $(electron_dir) && npx tsc
 
 build_renderer:

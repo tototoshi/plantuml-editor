@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 var app_pb = require('./app_pb.js');
 
 function serialize_PlantUMLRenderingRequest(arg) {

@@ -1,10 +1,10 @@
 import child_process from "child_process";
 import { EventEmitter } from "events";
-import { credentials } from "grpc";
+import { credentials, ServiceError } from "@grpc/grpc-js";
 import net from "net";
 import path from "path";
-import services from "./app_grpc_pb";
-import messages from "./app_pb";
+import { PreviewerClient } from "./app_grpc_pb";
+import { PlantUMLRenderingRequest, PlantUMLRenderingResponse } from "./app_pb";
 import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
@@ -46,12 +46,11 @@ export default class extends EventEmitter {
   private port?: number;
   private serverStarted: boolean;
   private service?: ChildProcessWithoutNullStreams;
-  private client: any;
+  private client?: PreviewerClient;
 
   constructor(appState: AppState) {
     super();
     this.serverStarted = false;
-    this.client = null;
 
     appState.on("request-svg", (content) => {
       this.renderPlantUML(content).catch((e) => console.log(e));
@@ -60,7 +59,7 @@ export default class extends EventEmitter {
 
   async start() {
     this.port = await getAvailablePort();
-    this.client = new services.PreviewerClient(
+    this.client = new PreviewerClient(
       "localhost:" + this.port,
       credentials.createInsecure()
     );
@@ -84,7 +83,7 @@ export default class extends EventEmitter {
   }
 
   async renderPlantUML(content: string) {
-    if (this.port === undefined) {
+    if (this.port === undefined || this.client === undefined) {
       throw new Error("#start is not called");
     }
 
@@ -93,16 +92,22 @@ export default class extends EventEmitter {
       this.serverStarted = true;
     }
 
-    const request = new (messages as any).PlantUMLRenderingRequest();
+    const request = new PlantUMLRenderingRequest();
     request.setData(stringToBytes(content));
-    this.client.renderPlantUML(request, (err: any, response: any) => {
-      if (err) {
-        console.error(err);
-      } else {
-        const svg = new TextDecoder("utf-8").decode(response.getData());
-        this.emit("svg-rendered", svg);
+
+    this.client.renderPlantUML(
+      request,
+      (err: ServiceError, response: PlantUMLRenderingResponse) => {
+        if (err) {
+          console.error(err);
+        } else {
+          const svg = new TextDecoder("utf-8").decode(
+            Buffer.from(response.getData())
+          );
+          this.emit("svg-rendered", svg);
+        }
       }
-    });
+    );
   }
 
   stop() {
