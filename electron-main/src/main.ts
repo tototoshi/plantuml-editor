@@ -10,6 +10,7 @@ const createWindow = async () => {
   const win = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
