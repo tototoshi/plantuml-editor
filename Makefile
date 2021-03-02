@@ -46,7 +46,7 @@ build_backend:
 	mkdir -p $(electron_dir)/dist/service && \
 	rsync -av $(backend_dir)/target/universal/stage/ $(electron_dir)/dist/service
 
-build: build_main build_renderer build_backend
+build: install build_main build_renderer build_backend
 	cd $(electron_dir) && \
 	npx electron-packager . "PlantUML Editor" \
 		--platform=darwin \
