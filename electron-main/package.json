@@ -14,7 +14,7 @@
     "@types/node": "^15.0.2",
     "electron": "^12.0.6",
     "electron-packager": "^15.2.0",
-    "grpc_tools_node_protoc_ts": "^5.2.1",
+    "grpc_tools_node_protoc_ts": "^5.2.2",
     "grpc-tools": "^1.11.1",
     "prettier": "^2.3.0",
     "typescript": "^4.2.4"
