@@ -20,21 +20,21 @@ export default class AppMenu extends EventEmitter {
       // { role: 'appMenu' }
       ...(isMac
         ? [
-          {
-            label: this.appName,
-            submenu: [
-              { role: "about" },
-              { type: "separator" },
-              { role: "services" },
-              { type: "separator" },
-              { role: "hide" },
-              { role: "hideothers" },
-              { role: "unhide" },
-              { type: "separator" },
-              { role: "quit" },
-            ],
-          },
-        ]
+            {
+              label: this.appName,
+              submenu: [
+                { role: "about" },
+                { type: "separator" },
+                { role: "services" },
+                { type: "separator" },
+                { role: "hide" },
+                { role: "hideothers" },
+                { role: "unhide" },
+                { type: "separator" },
+                { role: "quit" },
+              ],
+            },
+          ]
         : []),
       // { role: 'fileMenu' }
       {
@@ -69,6 +69,13 @@ export default class AppMenu extends EventEmitter {
               this.emit("save", force);
             },
           },
+          {
+            label: "Export",
+            accelerator: "CmdOrCtrl+E",
+            click: () => {
+              this.emit("export");
+            },
+          },
           isMac ? { role: "close" } : { role: "quit" },
         ],
       },
@@ -84,23 +91,23 @@ export default class AppMenu extends EventEmitter {
           { role: "paste" },
           ...(isMac
             ? [
-              { role: "pasteAndMatchStyle" },
-              { role: "delete" },
-              { role: "selectAll" },
-              { type: "separator" },
-              {
-                label: "Speech",
-                submenu: [
-                  { role: "startspeaking" },
-                  { role: "stopspeaking" },
-                ],
-              },
-            ]
+                { role: "pasteAndMatchStyle" },
+                { role: "delete" },
+                { role: "selectAll" },
+                { type: "separator" },
+                {
+                  label: "Speech",
+                  submenu: [
+                    { role: "startspeaking" },
+                    { role: "stopspeaking" },
+                  ],
+                },
+              ]
             : [
-              { role: "delete" },
-              { type: "separator" },
-              { role: "selectAll" },
-            ]),
+                { role: "delete" },
+                { type: "separator" },
+                { role: "selectAll" },
+              ]),
         ],
       },
       {

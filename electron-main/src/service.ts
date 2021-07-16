@@ -11,6 +11,7 @@ import {
 import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
+import fs from "fs";
 
 const waitServer = (port: number): Promise<void> => {
   return new Promise((resolve) => {
@@ -56,7 +57,15 @@ export default class extends EventEmitter {
     this.serverStarted = false;
 
     appState.on("request-svg", (content) => {
-      this.renderPlantUML(content).catch((e) => console.log(e));
+      this.renderPlantUML(content)
+        .then((svg) => this.emit("svg-rendered", this.decodeBuffer(svg)))
+        .catch((e) => console.log(e));
+    });
+
+    appState.on("export-svg", ({ filePath, content }) => {
+      this.renderPlantUML(content)
+        .then((svg) => fs.writeFileSync(filePath, svg))
+        .catch((e) => console.log(e));
     });
   }
 
@@ -85,7 +94,7 @@ export default class extends EventEmitter {
     });
   }
 
-  async renderPlantUML(content: string) {
+  async renderPlantUML(content: string): Promise<Buffer> {
     if (this.port === undefined || this.client === undefined) {
       throw new Error("#start is not called");
     }
@@ -98,19 +107,24 @@ export default class extends EventEmitter {
     const request = new PlantUMLRenderingRequest();
     request.setData(stringToBytes(content));
 
-    this.client.renderPlantUML(
-      request,
-      (err: ServiceError, response: PlantUMLRenderingResponse) => {
-        if (err) {
-          console.error(err);
-        } else {
-          const svg = new TextDecoder("utf-8").decode(
-            Buffer.from(response.getData())
-          );
-          this.emit("svg-rendered", svg);
+    const client = this.client;
+
+    return new Promise((resolve, reject) => {
+      client.renderPlantUML(
+        request,
+        (err: ServiceError, response: PlantUMLRenderingResponse) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(Buffer.from(response.getData()));
+          }
         }
-      }
-    );
+      );
+    });
+  }
+
+  decodeBuffer(buffer: Buffer): string {
+    return new TextDecoder("utf-8").decode(buffer);
   }
 
   stop() {

@@ -25,6 +25,10 @@ export default class AppState extends EventEmitter {
       this.onFileOpened().catch((e) => console.error(e));
     });
 
+    appMenu.on("export", () => {
+      this.onFileExport().catch((e) => console.error(e));
+    });
+
     ipcMain.handle("ipc-init", async () => {
       await this.onInit();
     });
@@ -94,6 +98,24 @@ export default class AppState extends EventEmitter {
 
     await fs.writeFile(this.filePath, this.content);
     this.emit("file-saved", { filePath: this.filePath });
+  }
+
+  async onFileExport() {
+    const result = await dialog.showSaveDialog(this.win, {});
+    if (result.canceled) {
+      return;
+    }
+
+    const filePath = result.filePath;
+
+    if (filePath === undefined || this.content === undefined) {
+      return;
+    }
+
+    this.emit("export-svg", {
+      filePath: filePath,
+      content: this.content,
+    });
   }
 
   onUserInput(content: string) {
