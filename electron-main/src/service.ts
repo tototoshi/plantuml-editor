@@ -1,17 +1,15 @@
 import child_process from "child_process";
 import { EventEmitter } from "events";
-import { credentials, ServiceError } from "@grpc/grpc-js";
+import { credentials } from "@grpc/grpc-js";
 import net from "net";
 import path from "path";
 import { PreviewerClient } from "./generated/app_grpc_pb";
-import {
-  PlantUMLRenderingRequest,
-  PlantUMLRenderingResponse,
-} from "./generated/app_pb";
+import { PlantUMLRenderingRequest} from "./generated/app_pb";
 import AppState from "./app_state";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import { AddressInfo } from "net";
 import fs from "fs";
+import { PreviewerClientWrapper } from './previewerClientWrapper';
 
 const waitServer = (port: number): Promise<void> => {
   return new Promise((resolve) => {
@@ -50,7 +48,7 @@ export default class extends EventEmitter {
   private port?: number;
   private serverStarted: boolean;
   private service?: ChildProcessWithoutNullStreams;
-  private client?: PreviewerClient;
+  private client?: PreviewerClientWrapper;
 
   constructor(appState: AppState) {
     super();
@@ -71,10 +69,10 @@ export default class extends EventEmitter {
 
   async start() {
     this.port = await getAvailablePort();
-    this.client = new PreviewerClient(
+    this.client = new PreviewerClientWrapper(new PreviewerClient(
       "localhost:" + this.port,
       credentials.createInsecure()
-    );
+    ));
 
     this.service = child_process.spawn(
       path.join(__dirname, "service/bin/service"),
@@ -107,20 +105,9 @@ export default class extends EventEmitter {
     const request = new PlantUMLRenderingRequest();
     request.setData(stringToBytes(content));
 
-    const client = this.client;
+    const response = await this.client.renderPlantUML(request);
 
-    return new Promise((resolve, reject) => {
-      client.renderPlantUML(
-        request,
-        (err: ServiceError, response: PlantUMLRenderingResponse) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(Buffer.from(response.getData()));
-          }
-        }
-      );
-    });
+    return Buffer.from(response.getData());
   }
 
   decodeBuffer(buffer: Buffer): string {
