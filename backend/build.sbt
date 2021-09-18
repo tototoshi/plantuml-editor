@@ -4,7 +4,7 @@ lazy val root = project.in(file("."))
     name := "service",
     organization := "com.github.tototoshi",
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := "2.13.5",
+    scalaVersion := "2.13.6",
     libraryDependencies ++= Seq(
       "net.sourceforge.plantuml" % "plantuml" % "1.2021.10",
       "io.grpc" % "grpc-core" % "1.40.1",
