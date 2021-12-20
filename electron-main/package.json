@@ -6,7 +6,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@grpc/grpc-js": "^1.4.4",
+    "@grpc/grpc-js": "^1.4.5",
     "child_process": "^1.0.2",
     "google-protobuf": "^3.19.1"
   },
