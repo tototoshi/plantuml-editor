@@ -7,10 +7,10 @@ lazy val root = project.in(file("."))
     scalaVersion := "2.13.8",
     libraryDependencies ++= Seq(
       "net.sourceforge.plantuml" % "plantuml" % "1.2022.0",
-      "io.grpc" % "grpc-core" % "1.43.2",
-      "io.grpc" % "grpc-stub" % "1.43.2",
-      "io.grpc" % "grpc-protobuf" % "1.43.2",
-      "io.grpc" % "grpc-netty" % "1.43.2" % Runtime,
+      "io.grpc" % "grpc-core" % "1.44.0",
+      "io.grpc" % "grpc-stub" % "1.44.0",
+      "io.grpc" % "grpc-protobuf" % "1.44.0",
+      "io.grpc" % "grpc-netty" % "1.44.0" % Runtime,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion
     ),
     mappings in (Compile, packageDoc) := Seq(),
