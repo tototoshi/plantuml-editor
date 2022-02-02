@@ -11,7 +11,7 @@
     "google-protobuf": "^3.19.4"
   },
   "devDependencies": {
-    "@types/node": "^17.0.6",
+    "@types/node": "^17.0.14",
     "electron": "^17.0.0",
     "electron-packager": "^15.4.0",
     "grpc_tools_node_protoc_ts": "^5.3.2",
