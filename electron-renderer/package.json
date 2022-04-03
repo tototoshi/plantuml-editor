@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",
-    "@types/react": "^17.0.39",
+    "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.12",
     "electron": "^18.0.1",
     "prettier": "^2.5.1",
