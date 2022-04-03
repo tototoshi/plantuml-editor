@@ -14,7 +14,7 @@
     "@types/electron": "^1.6.10",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.12",
-    "electron": "^17.1.0",
+    "electron": "^18.0.1",
     "prettier": "^2.5.1",
     "ts-loader": "^9.2.6",
     "typescript": "^4.6.2",
