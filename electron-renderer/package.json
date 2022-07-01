@@ -8,7 +8,7 @@
   "license": "ISC",
   "dependencies": {
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",
