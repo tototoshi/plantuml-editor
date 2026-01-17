@@ -1,4 +1,4 @@
-import electron, { Menu, MenuItemConstructorOptions } from "electron";
+import electron, { Menu, MenuItemConstructorOptions, BrowserWindow } from "electron";
 import { EventEmitter } from "events";
 
 export default class AppMenu extends EventEmitter {
@@ -115,15 +115,17 @@ export default class AppMenu extends EventEmitter {
           {
             label: "Reload",
             accelerator: "CmdOrCtrl+R",
-            click: (item, focusedWindow) => {
-              if (focusedWindow) focusedWindow.reload();
+            click: (_item, focusedWindow) => {
+              const win = focusedWindow as BrowserWindow | undefined;
+              if (win) win.reload();
             },
           },
           {
             label: "Toggle Developer Tools",
             accelerator: isMac ? "Alt+Command+I" : "Ctrl+Shift+I",
-            click: (item, focusedWindow) => {
-              if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+            click: (_item, focusedWindow) => {
+              const win = focusedWindow as BrowserWindow | undefined;
+              if (win) win.webContents.toggleDevTools();
             },
           },
         ],
