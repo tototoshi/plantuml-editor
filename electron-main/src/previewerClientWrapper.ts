@@ -6,23 +6,22 @@ import {
 } from "./generated/app_pb";
 
 export class PreviewerClientWrapper {
+  constructor(private client: PreviewerClient) {}
 
-    constructor(private client: PreviewerClient) {
-      this.client = client;
-    }
-
-    async renderPlantUML(request: PlantUMLRenderingRequest): Promise<PlantUMLRenderingResponse> {
-      return new Promise((resolve, reject) => {
-        this.client.renderPlantUML(
-          request,
-          (err: ServiceError, response: PlantUMLRenderingResponse) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(response)
-            }
+  async renderPlantUML(
+    request: PlantUMLRenderingRequest
+  ): Promise<PlantUMLRenderingResponse> {
+    return new Promise((resolve, reject) => {
+      this.client.renderPlantUML(
+        request,
+        (err: ServiceError | null, response: PlantUMLRenderingResponse) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(response);
           }
-        );
-      });
-    }
+        }
+      );
+    });
   }
+}

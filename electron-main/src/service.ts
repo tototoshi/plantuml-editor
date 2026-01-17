@@ -44,7 +44,7 @@ const stringToBytes = (s: string) => {
   return new TextEncoder().encode(s);
 };
 
-export default class extends EventEmitter {
+export default class Service extends EventEmitter {
   private port?: number;
   private serverStarted: boolean;
   private service?: ChildProcessWithoutNullStreams;

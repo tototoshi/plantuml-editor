@@ -1,10 +1,9 @@
-import electron, { Menu } from "electron";
+import electron, { Menu, MenuItemConstructorOptions } from "electron";
 import { EventEmitter } from "events";
 
 export default class AppMenu extends EventEmitter {
   constructor(private appName: string) {
     super();
-    this.appName = appName;
   }
 
   setUp() {
@@ -13,7 +12,7 @@ export default class AppMenu extends EventEmitter {
     Menu.setApplicationMenu(menu);
   }
 
-  menuTemplate(): any {
+  menuTemplate(): MenuItemConstructorOptions[] {
     const isMac = process.platform === "darwin";
 
     return [
@@ -23,15 +22,15 @@ export default class AppMenu extends EventEmitter {
             {
               label: this.appName,
               submenu: [
-                { role: "about" },
-                { type: "separator" },
-                { role: "services" },
-                { type: "separator" },
-                { role: "hide" },
-                { role: "hideothers" },
-                { role: "unhide" },
-                { type: "separator" },
-                { role: "quit" },
+                { role: "about" as const },
+                { type: "separator" as const },
+                { role: "services" as const },
+                { type: "separator" as const },
+                { role: "hide" as const },
+                { role: "hideOthers" as const },
+                { role: "unhide" as const },
+                { type: "separator" as const },
+                { role: "quit" as const },
               ],
             },
           ]
@@ -76,37 +75,37 @@ export default class AppMenu extends EventEmitter {
               this.emit("export");
             },
           },
-          isMac ? { role: "close" } : { role: "quit" },
+          isMac ? { role: "close" as const } : { role: "quit" as const },
         ],
       },
       // { role: 'editMenu' }
       {
         label: "Edit",
         submenu: [
-          { role: "undo" },
-          { role: "redo" },
-          { type: "separator" },
-          { role: "cut" },
-          { role: "copy" },
-          { role: "paste" },
+          { role: "undo" as const },
+          { role: "redo" as const },
+          { type: "separator" as const },
+          { role: "cut" as const },
+          { role: "copy" as const },
+          { role: "paste" as const },
           ...(isMac
             ? [
-                { role: "pasteAndMatchStyle" },
-                { role: "delete" },
-                { role: "selectAll" },
-                { type: "separator" },
+                { role: "pasteAndMatchStyle" as const },
+                { role: "delete" as const },
+                { role: "selectAll" as const },
+                { type: "separator" as const },
                 {
                   label: "Speech",
                   submenu: [
-                    { role: "startspeaking" },
-                    { role: "stopspeaking" },
+                    { role: "startSpeaking" as const },
+                    { role: "stopSpeaking" as const },
                   ],
                 },
               ]
             : [
-                { role: "delete" },
-                { type: "separator" },
-                { role: "selectAll" },
+                { role: "delete" as const },
+                { type: "separator" as const },
+                { role: "selectAll" as const },
               ]),
         ],
       },
@@ -116,17 +115,14 @@ export default class AppMenu extends EventEmitter {
           {
             label: "Reload",
             accelerator: "CmdOrCtrl+R",
-            click: (item: any, focusedWindow: any) => {
+            click: (item, focusedWindow) => {
               if (focusedWindow) focusedWindow.reload();
             },
           },
           {
             label: "Toggle Developer Tools",
-            accelerator: (function () {
-              if (process.platform == "darwin") return "Alt+Command+I";
-              else return "Ctrl+Shift+I";
-            })(),
-            click: (item: any, focusedWindow: any) => {
+            accelerator: isMac ? "Alt+Command+I" : "Ctrl+Shift+I",
+            click: (item, focusedWindow) => {
               if (focusedWindow) focusedWindow.webContents.toggleDevTools();
             },
           },
@@ -134,28 +130,30 @@ export default class AppMenu extends EventEmitter {
       },
       {
         label: "Window",
-        role: "window",
+        role: "window" as const,
         submenu: [
           {
             label: "Minimize",
             accelerator: "CmdOrCtrl+M",
-            role: "minimize",
+            role: "minimize" as const,
           },
           {
             label: "Close",
             accelerator: "CmdOrCtrl+W",
-            role: "close",
+            role: "close" as const,
           },
         ],
       },
       {
         label: "Help",
-        role: "help",
+        role: "help" as const,
         submenu: [
           {
             label: "Learn More",
-            click: function () {
-              electron.shell.openExternal("http://electron.atom.io");
+            click: () => {
+              electron.shell.openExternal(
+                "https://www.electronjs.org"
+              );
             },
           },
         ],
