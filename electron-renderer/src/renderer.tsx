@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import CodeMirror from "@uiw/react-codemirror";
+import { xml } from "@codemirror/lang-xml";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 interface AppState {
   filePath?: string;
@@ -24,7 +27,6 @@ declare global {
 }
 
 function App() {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, setState] = useState<AppState>({
     content: "",
     svg: "",
@@ -35,17 +37,14 @@ function App() {
 
     const unsubscribeInit = window.electronAPI.onInit((newState) => {
       setState(newState);
-      setTextareaValue(newState.content);
     });
 
     const unsubscribeNewFile = window.electronAPI.onNewFile((newState) => {
       setState(newState);
-      setTextareaValue(newState.content);
     });
 
     const unsubscribeFileOpened = window.electronAPI.onFileOpened((newState) => {
       setState(newState);
-      setTextareaValue(newState.content);
       showFlash("opened");
     });
 
@@ -67,13 +66,6 @@ function App() {
     };
   }, []);
 
-  const setTextareaValue = (content: string): void => {
-    if (textareaRef.current) {
-      textareaRef.current.value = content;
-      textareaRef.current.selectionStart = textareaRef.current.selectionEnd = 0;
-    }
-  };
-
   const showFlash = (message: string) => {
     setState((prevState) => ({ ...prevState, flash: message }));
     setTimeout(() => {
@@ -81,8 +73,8 @@ function App() {
     }, 1000);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    window.electronAPI.sendInput(e.target.value);
+  const handleChange = (value: string) => {
+    window.electronAPI.sendInput(value);
   };
 
   const svgDataUrl = state.svg
@@ -97,10 +89,33 @@ function App() {
       </div>
       <div className="row">
         <div className="left">
-          <textarea
-            ref={textareaRef}
-            defaultValue={state.content}
+          <CodeMirror
+            value={state.content}
+            height="100%"
+            theme={oneDark}
+            extensions={[xml()]}
             onChange={handleChange}
+            basicSetup={{
+              lineNumbers: true,
+              highlightActiveLineGutter: true,
+              highlightActiveLine: true,
+              foldGutter: true,
+              drawSelection: true,
+              dropCursor: true,
+              allowMultipleSelections: true,
+              indentOnInput: true,
+              bracketMatching: true,
+              closeBrackets: true,
+              autocompletion: true,
+              rectangularSelection: true,
+              crosshairCursor: true,
+              highlightSelectionMatches: true,
+              closeBracketsKeymap: true,
+              searchKeymap: true,
+              foldKeymap: true,
+              completionKeymap: true,
+              lintKeymap: true,
+            }}
           />
         </div>
         <div className="right">
