@@ -4,7 +4,7 @@ lazy val root = project.in(file("."))
     name := "service",
     organization := "com.github.tototoshi",
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := "2.13.18",
+    scalaVersion := "3.6.3",
     libraryDependencies ++= Seq(
       "net.sourceforge.plantuml" % "plantuml" % "8059",
       "io.grpc" % "grpc-core" % "1.78.0",
@@ -13,7 +13,7 @@ lazy val root = project.in(file("."))
       "io.grpc" % "grpc-netty" % "1.78.0" % Runtime,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion
     ),
-    mappings in (Compile, packageDoc) := Seq(),
+    Compile / packageDoc / mappings := Seq(),
     Compile / PB.targets := Seq(
       scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
     ),
