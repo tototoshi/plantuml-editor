@@ -1,4 +1,5 @@
 import { BrowserWindow, app } from "electron";
+import path from "path";
 import Service from "./service";
 import AppState from "./app_state";
 import AppMenu from "./app_menu";
@@ -9,8 +10,9 @@ let service: Service | undefined;
 const createWindow = async () => {
   const win = new BrowserWindow({
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
