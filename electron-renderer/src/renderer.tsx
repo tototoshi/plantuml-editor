@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { ipcRenderer } from "electron";
 
 interface AppState {
@@ -115,4 +115,5 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const root = createRoot(document.getElementById("root")!);
+root.render(<App />);
