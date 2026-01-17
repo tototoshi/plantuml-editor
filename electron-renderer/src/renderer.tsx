@@ -82,7 +82,7 @@ function App() {
     : null;
 
   return (
-    <div>
+    <>
       <div className="status-line">
         <span className="file-path">{state.filePath}</span>
         <span>{state.flash ? `(${state.flash})` : ""}</span>
@@ -130,7 +130,7 @@ function App() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
