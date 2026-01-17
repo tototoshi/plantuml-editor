@@ -21,6 +21,7 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
+goog.exportSymbol('proto.FileFormat', null, global);
 goog.exportSymbol('proto.PlantUMLRenderingRequest', null, global);
 goog.exportSymbol('proto.PlantUMLRenderingResponse', null, global);
 /**
@@ -97,7 +98,8 @@ proto.PlantUMLRenderingRequest.prototype.toObject = function(opt_includeInstance
  */
 proto.PlantUMLRenderingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    data: msg.getData_asB64()
+    data: msg.getData_asB64(),
+    format: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -138,6 +140,10 @@ proto.PlantUMLRenderingRequest.deserializeBinaryFromReader = function(msg, reade
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setData(value);
       break;
+    case 2:
+      var value = /** @type {!proto.FileFormat} */ (reader.readEnum());
+      msg.setFormat(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -171,6 +177,13 @@ proto.PlantUMLRenderingRequest.serializeBinaryToWriter = function(message, write
   if (f.length > 0) {
     writer.writeBytes(
       1,
+      f
+    );
+  }
+  f = message.getFormat();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      2,
       f
     );
   }
@@ -216,6 +229,24 @@ proto.PlantUMLRenderingRequest.prototype.getData_asU8 = function() {
  */
 proto.PlantUMLRenderingRequest.prototype.setData = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
+};
+
+
+/**
+ * optional FileFormat format = 2;
+ * @return {!proto.FileFormat}
+ */
+proto.PlantUMLRenderingRequest.prototype.getFormat = function() {
+  return /** @type {!proto.FileFormat} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {!proto.FileFormat} value
+ * @return {!proto.PlantUMLRenderingRequest} returns this
+ */
+proto.PlantUMLRenderingRequest.prototype.setFormat = function(value) {
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -372,5 +403,13 @@ proto.PlantUMLRenderingResponse.prototype.setData = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.FileFormat = {
+  SVG: 0,
+  PNG: 1
+};
 
 goog.object.extend(exports, proto);

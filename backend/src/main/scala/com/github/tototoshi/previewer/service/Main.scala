@@ -28,7 +28,11 @@ class PreviewerService extends PreviewerGrpc.Previewer {
   override def renderPlantUML(request: PlantUMLRenderingRequest): Future[PlantUMLRenderingResponse] = {
     val reader = new SourceStringReader(request.data.toString(StandardCharsets.UTF_8))
     val os = new ByteArrayOutputStream()
-    reader.generateImage(os, new FileFormatOption(FileFormat.SVG))
+    val fileFormat = request.format match {
+      case com.github.tototoshi.previewer.app.FileFormat.PNG => FileFormat.PNG
+      case _ => FileFormat.SVG
+    }
+    reader.generateImage(os, new FileFormatOption(fileFormat))
     Future.successful(PlantUMLRenderingResponse(data = ByteString.copyFrom(os.toByteArray)))
   }
 

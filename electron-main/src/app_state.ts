@@ -111,7 +111,12 @@ Bob -> Alice: Hello
   }
 
   async onFileExport() {
-    const result = await dialog.showSaveDialog(this.win, {});
+    const result = await dialog.showSaveDialog(this.win, {
+      filters: [
+        { name: 'SVG Image', extensions: ['svg'] },
+        { name: 'PNG Image', extensions: ['png'] }
+      ]
+    });
     if (result.canceled) {
       return;
     }
@@ -122,9 +127,13 @@ Bob -> Alice: Hello
       return;
     }
 
-    this.emit("export-svg", {
+    // Detect format from file extension
+    const format = filePath.toLowerCase().endsWith('.png') ? 'png' : 'svg';
+
+    this.emit("export-file", {
       filePath: filePath,
       content: this.content,
+      format: format,
     });
   }
 

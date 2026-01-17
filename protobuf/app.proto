@@ -2,8 +2,14 @@ syntax = "proto3";
 
 option java_package = "com.github.tototoshi.previewer";
 
+enum FileFormat {
+    SVG = 0;
+    PNG = 1;
+}
+
 message PlantUMLRenderingRequest {
     bytes data = 1;
+    FileFormat format = 2;
 }
 
 message PlantUMLRenderingResponse {

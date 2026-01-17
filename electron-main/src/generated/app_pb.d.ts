@@ -11,6 +11,8 @@ export class PlantUMLRenderingRequest extends jspb.Message {
     getData_asU8(): Uint8Array;
     getData_asB64(): string;
     setData(value: Uint8Array | string): PlantUMLRenderingRequest;
+    getFormat(): FileFormat;
+    setFormat(value: FileFormat): PlantUMLRenderingRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): PlantUMLRenderingRequest.AsObject;
@@ -25,6 +27,7 @@ export class PlantUMLRenderingRequest extends jspb.Message {
 export namespace PlantUMLRenderingRequest {
     export type AsObject = {
         data: Uint8Array | string,
+        format: FileFormat,
     }
 }
 
@@ -48,4 +51,9 @@ export namespace PlantUMLRenderingResponse {
     export type AsObject = {
         data: Uint8Array | string,
     }
+}
+
+export enum FileFormat {
+    SVG = 0,
+    PNG = 1,
 }

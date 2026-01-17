@@ -55,14 +55,14 @@ export default class Service extends EventEmitter {
     this.serverStarted = false;
 
     appState.on("request-svg", (content) => {
-      this.renderPlantUML(content)
+      this.renderPlantUML(content, "svg")
         .then((svg) => this.emit("svg-rendered", this.decodeBuffer(svg)))
         .catch((e) => console.log(e));
     });
 
-    appState.on("export-svg", ({ filePath, content }) => {
-      this.renderPlantUML(content)
-        .then((svg) => fs.writeFileSync(filePath, svg))
+    appState.on("export-file", ({ filePath, content, format }) => {
+      this.renderPlantUML(content, format)
+        .then((data) => fs.writeFileSync(filePath, data))
         .catch((e) => console.log(e));
     });
   }
@@ -92,7 +92,7 @@ export default class Service extends EventEmitter {
     });
   }
 
-  async renderPlantUML(content: string): Promise<Buffer> {
+  async renderPlantUML(content: string, format: string = "svg"): Promise<Buffer> {
     if (this.port === undefined || this.client === undefined) {
       throw new Error("#start is not called");
     }
@@ -104,6 +104,8 @@ export default class Service extends EventEmitter {
 
     const request = new PlantUMLRenderingRequest();
     request.setData(stringToBytes(content));
+    // Set format: 0 = SVG, 1 = PNG
+    request.setFormat(format === "png" ? 1 : 0);
 
     const response = await this.client.renderPlantUML(request);
 
