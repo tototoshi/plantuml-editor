@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import CodeMirror from "@uiw/react-codemirror";
-import { xml } from "@codemirror/lang-xml";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { plantuml } from "./plantuml-lang";
 
 interface AppState {
   filePath?: string;
@@ -93,7 +93,7 @@ function App() {
             value={state.content}
             height="100%"
             theme={oneDark}
-            extensions={[xml()]}
+            extensions={[plantuml()]}
             onChange={handleChange}
             basicSetup={{
               lineNumbers: true,
