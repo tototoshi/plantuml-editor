@@ -38,7 +38,7 @@ build_main: gen_protobuf
 
 build_renderer:
 	cd $(electron_renderer_dir) && \
-	npx webpack
+	npx vite build
 
 build_backend:
 	cd $(backend_dir) && \
