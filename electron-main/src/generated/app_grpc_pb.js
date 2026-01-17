@@ -41,4 +41,4 @@ var PreviewerService = exports.PreviewerService = {
   },
 };
 
-exports.PreviewerClient = grpc.makeGenericClientConstructor(PreviewerService);
+exports.PreviewerClient = grpc.makeGenericClientConstructor(PreviewerService, 'Previewer');
