@@ -22,6 +22,7 @@ function App() {
 
     ipcRenderer.on("init", (e, state) => {
       setState(state);
+      setTextarea(state.content);
     });
 
     ipcRenderer.on("new-file", (e, state) => {
@@ -35,8 +36,8 @@ function App() {
       flash("opened");
     });
 
-    ipcRenderer.on("svg-updated", (e, state) => {
-      setState(state);
+    ipcRenderer.on("svg-updated", (e, data) => {
+      setState((prevState) => ({ ...prevState, svg: data.svg }));
     });
 
     ipcRenderer.on("file-saved", (e, state) => {

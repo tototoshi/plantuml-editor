@@ -9,6 +9,16 @@ export default class AppState extends EventEmitter {
   private filePath?: string;
   private content?: string;
 
+  private defaultContent = `@startuml
+
+skinparam monochrome true
+skinparam shadowing false
+
+Bob -> Alice: Hello
+
+@enduml 
+`
+
   constructor(win: BrowserWindow, appMenu: AppMenu) {
     super();
     this.win = win;
@@ -40,7 +50,7 @@ export default class AppState extends EventEmitter {
 
   async onInit() {
     let filePath;
-    let content = "@startuml\n\n\n@enduml\n";
+    let content = this.defaultContent;
 
     if (process.argv[2]) {
       filePath = path.resolve(process.argv[2]);
@@ -62,7 +72,7 @@ export default class AppState extends EventEmitter {
 
   onNewFile() {
     this.filePath = undefined;
-    this.content = "@startuml\n\n\n@enduml\n";
+    this.content = this.defaultContent;
     this.emit("new-file", { filePath: this.filePath, content: this.content });
     this.emit("request-svg", this.content);
   }
